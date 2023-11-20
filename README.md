@@ -2,7 +2,14 @@
 * Selenium Hub
 * Appium android node
   * Start android emulator
+ 
 
+
+
+### 0. Check android devices
+```
+$adb devices
+```
 
 ### 1. Start Selenium Hub
 ```
