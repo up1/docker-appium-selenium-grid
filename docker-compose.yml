@@ -1,0 +1,38 @@
+version: "3"
+services:
+  selenium_hub:
+    image: selenium/hub
+    ports:
+      - 4444:4444
+  
+  selenium_node:
+    image: selenium/node-docker
+    depends_on:
+      - selenium_hub
+    volumes:
+      - ./node_android.toml:/opt/bin/config.toml
+    environment:
+      - SE_EVENT_BUS_HOST=selenium_hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=1
+      
+  appium_android_device:
+    image: appium/appium
+    depends_on:
+      - selenium_hub
+    privileged: true
+    command: ["appium", "--config", "/home/androidusr/appium-docker-android/appium_android.yml"]
+    volumes:
+      - ~/.android:/root/.android
+      - ./appium_android.yml:/home/androidusr/appium-docker-android/appium_android.yml
+    environment:
+      - CONNECT_TO_GRID=true
+      - SELENIUM_HOST=selenium_hub
+      - SELENIUM_PORT=4444
+      - ANDROID_ADB_SERVER_ADDRESS=host.docker.internal
+      - APPIUM_HOST=127.0.0.1
+      - APPIUM_PORT=4723
+    ports:
+      - 4723:4723
