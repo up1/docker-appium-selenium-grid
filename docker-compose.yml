@@ -23,15 +23,17 @@ services:
     depends_on:
       - selenium_hub
     privileged: true
-    command: ["appium", "--config", "/home/androidusr/appium-docker-android/appium_android.yml"]
+    command: ["appium", "--config", "/home/androidusr/appium-docker-android/appium_android.yml", "--relaxed-security"]
     volumes:
       - ~/.android:/root/.android
       - ./appium_android.yml:/home/androidusr/appium-docker-android/appium_android.yml
+      - ./demo.apk:/home/androidusr/appium-docker-android/demo.apk
     environment:
       - CONNECT_TO_GRID=true
       - SELENIUM_HOST=selenium_hub
       - SELENIUM_PORT=4444
       - ANDROID_ADB_SERVER_ADDRESS=host.docker.internal
+      - ANDROID_ADB_SERVER_PORT=5037
       - APPIUM_HOST=127.0.0.1
       - APPIUM_PORT=4723
     ports:
